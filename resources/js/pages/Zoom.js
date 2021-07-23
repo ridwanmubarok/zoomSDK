@@ -8,31 +8,28 @@ import { ZoomMtg } from '@zoomus/websdk'
 const Zoom = (props) => {
 
     useEffect(() => {
-        let isMounted = true;               // note mutable flag
-        if (isMounted) {
-            ZoomMtg.setZoomJSLib('https://source.zoom.us/1.9.5/lib', '/av');
-            ZoomMtg.preLoadWasm();
-            ZoomMtg.prepareJssdk();
-            GenerateSignature();
-        }
-        return () => { isMounted = false }; // use cleanup to toggle value, if unmounted
-    }, [])
+        ZoomMtg.setZoomJSLib('@zoomus/websdk/dist/lib', '/av');
+        ZoomMtg.preLoadWasm();
+        ZoomMtg.prepareJssdk();
+        initMeeting()
+    }, []);
 
-    const [UserEmail] = React.useState(props.UserEmail ?? '');
-    const [MeetingId] = React.useState(props.MeetingId ?? '');
-    const [MeetingPassword] = React.useState(props.MeetingPassword ?? '');
-    const [MeetingUsername] = React.useState(props.MeetingUsername ?? '');
-    var signatureEndpoint = 'http://127.0.0.1:8000/api/zoom/signature'
+    const [Loading, setLoading] = React.useState(true);
+    var signatureEndpoint = 'https://zoom.4visionmedia.net/api/zoom/signature'
     var apiKey = '5RA9w_uATB2TEqUKunNV2g'
-    var role = 1
-    var leaveUrl = 'http://127.0.0.1:8000'
+    var role = 0
+    var leaveUrl = 'https://zoom.4visionmedia.net/'
+
+    const initMeeting = async () => {
+        GenerateSignature();
+    }
 
     const GenerateSignature = () => {
         fetch(signatureEndpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                meetingNumber: MeetingId,
+                meetingNumber: props.MeetingId,
                 role: role
             })
         }).then(res => res.json())
@@ -42,6 +39,7 @@ const Zoom = (props) => {
                 console.error(error)
             })
     }
+
     const StartMeting = async (signature) => {
         document.getElementById('zmmtg-root').style.display = "block";
         await ZoomMtg.init({
@@ -51,15 +49,14 @@ const Zoom = (props) => {
                 ZoomMtg.join({
                     signature: signature,
                     apiKey: apiKey,
-                    meetingNumber: MeetingId,
-                    userName: MeetingUsername,
-                    userEmail: UserEmail,
-                    passWord: MeetingPassword,
+                    meetingNumber: props.MeetingId,
+                    userName: props.MeetingUsername,
+                    userEmail: props.UserEmail,
+                    passWord: props.MeetingPassword,
                     error: (error) => {
                         console.log(error)
                     }
                 })
-
             },
             error: (error) => {
                 console.log(error)
@@ -67,7 +64,10 @@ const Zoom = (props) => {
         })
     }
 
-    return <div className="App"> Zoom </div>;
+    return (
+        <div className="App">
+        </div>
+    );
 }
 
 
