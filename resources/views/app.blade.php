@@ -7,7 +7,7 @@
     <title>4VM ZOOM</title>
 </head>
 <body>
-    <div id="root">
+    <div id="root custom-zoom">
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

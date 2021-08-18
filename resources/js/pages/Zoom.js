@@ -65,7 +65,7 @@ const Zoom = (props) => {
     }
 
     return (
-        <div className="App">
+        <div className="App custom-zoom">
         </div>
     );
 }
