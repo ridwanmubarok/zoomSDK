@@ -6,8 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>4VM ZOOM</title>
 </head>
-<body class="custom-zoom">
-    <div id="root">
+<body>
+    <div id="root" class="custom-zoom">
     </div>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
